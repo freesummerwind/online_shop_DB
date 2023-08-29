@@ -3,6 +3,12 @@ public class Product {
     private double price;
     private int quantityInStock;
 
+    public Product(String name, double price, int quantityInStock) throws Exception {
+        setName(name);
+        setPrice(price);
+        setQuantityInStock(quantityInStock);
+    }
+
     public void setName(String name) throws Exception {
         if (name.isEmpty()) {
             throw new Exception("Name can't be empty");
