@@ -8,9 +8,9 @@ public class Order {
 
     public Order(Client customer, HashMap<Product, Integer> products) throws Exception {
         setCustomer(customer);
+        setStatus("formed");
         this.products = new HashMap<>();
         setProducts(products);
-        setStatus("formed");
     }
 
     public void setCustomer(Client customer) {
