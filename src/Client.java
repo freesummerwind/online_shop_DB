@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Client extends Person{
@@ -6,12 +7,15 @@ public class Client extends Person{
     private String phoneNumber;
     private HashMap<Product, Integer> basket;
 
+    private ArrayList<Order> orders;
+
     public Client(String name, String surname, int age, String address, String cardNumber, String phoneNumber) throws Exception {
         super(name, surname, age);
         setAddress(address);
         setCardNumber(cardNumber);
         setPhoneNumber(phoneNumber);
         basket = new HashMap<>();
+        orders = new ArrayList<>();
     }
 
     public void setAddress(String address) throws Exception {
@@ -39,6 +43,14 @@ public class Client extends Person{
             throw new Exception("Card number should contains 11 digits");
         }
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setBasket(HashMap<Product, Integer> basket) {
+        this.basket = basket;
+    }
+
+    public void setOrders(ArrayList<Order> orders) {
+        this.orders = orders;
     }
 
     public String getAddress() {
@@ -78,6 +90,12 @@ public class Client extends Person{
                 basket.remove(product);
             }
         }
+    }
+
+    public Order createNewOrder() throws Exception {
+        Order order = new Order(this, basket);
+        orders.add(order);
+        return order;
     }
 
     @Override
