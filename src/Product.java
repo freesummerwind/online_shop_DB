@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 public class Product {
     private String name;
     private double price;
@@ -51,5 +53,13 @@ public class Product {
             throw new Exception("Can't sell more products than there are on stock");
         }
         this.quantityInStock -= productsNumber;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject product = new JSONObject();
+        product.put("name", getName());
+        product.put("price", getPrice());
+        product.put("quantityInStock", getQuantityInStock());
+        return product;
     }
 }

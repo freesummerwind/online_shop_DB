@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,7 +9,6 @@ public class Client extends Person{
     private String phoneNumber;
     private HashMap<Product, Integer> basket;
 
-    private ArrayList<Order> orders;
 
     public Client(String name, String surname, int age, String address, String cardNumber, String phoneNumber) throws Exception {
         super(name, surname, age);
@@ -65,6 +66,14 @@ public class Client extends Person{
         return phoneNumber;
     }
 
+    public HashMap<Product, Integer> getBasket() {
+        return basket;
+    }
+
+    public ArrayList<Order> getOrders() {
+        return orders;
+    }
+
     public void addProductToBasket(Product product, int number) throws Exception {
         if (basket.containsKey(product) && (basket.get(product) + number) > product.getQuantityInStock()) {
             throw new Exception("There can't be more products in the basket than on the stock");
@@ -102,5 +111,16 @@ public class Client extends Person{
     String display() {
         return String.format("Full name: %s\nPhone: %s\nCard number: %s\nAddress: %s\n", getSurname() + " " + getName(),
                 getPhoneNumber(), getCardNumber(), getAddress());
+    }
+
+    public JSONObject toJSON() {
+        JSONObject client = new JSONObject();
+        client.put("name", getName());
+        client.put("surname", getSurname());
+        client.put("age", getAge());
+        client.put("address", getAddress());
+        client.put("cardNumber", getCardNumber());
+        client.put("phoneNumber", getPhoneNumber());
+        return client;
     }
 }

@@ -1,3 +1,6 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 public class Order {
@@ -75,5 +78,21 @@ public class Order {
         }
         return String.format("Client info:\n%s\nProducts info:\n%s\nTotal Amount: %f\nStatus: %s\n", customer.display(),
                 productsInfo, getTotalAmount(), getStatus());
+    }
+
+    public JSONObject toJSON() {
+        JSONObject order = new JSONObject();
+        order.put("customer", customer.toJSON());
+        order.put("status", getStatus());
+        JSONArray productsInOrder = new JSONArray();
+        for (Product product : products.keySet()) {
+            JSONObject current = new JSONObject();
+            current.put("name", product.getName());
+            current.put("number", products.get(product));
+            productsInOrder.put(current);
+        }
+        order.put("products", productsInOrder);
+        return order;
+
     }
 }
