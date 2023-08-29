@@ -16,7 +16,6 @@ public class Client extends Person{
         setCardNumber(cardNumber);
         setPhoneNumber(phoneNumber);
         basket = new HashMap<>();
-        orders = new ArrayList<>();
     }
 
     public void setAddress(String address) throws Exception {
@@ -50,10 +49,6 @@ public class Client extends Person{
         this.basket = basket;
     }
 
-    public void setOrders(ArrayList<Order> orders) {
-        this.orders = orders;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -68,10 +63,6 @@ public class Client extends Person{
 
     public HashMap<Product, Integer> getBasket() {
         return basket;
-    }
-
-    public ArrayList<Order> getOrders() {
-        return orders;
     }
 
     public void addProductToBasket(Product product, int number) throws Exception {
@@ -102,9 +93,7 @@ public class Client extends Person{
     }
 
     public Order createNewOrder() throws Exception {
-        Order order = new Order(this, basket);
-        orders.add(order);
-        return order;
+        return new Order(this, basket);
     }
 
     @Override
