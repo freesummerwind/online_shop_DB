@@ -58,4 +58,22 @@ public class Order {
         }
         this.products.clear();
     }
+
+    public double getTotalAmount() {
+        double totalAmount = 0.0;
+        for (Product product : products.keySet()) {
+            totalAmount += product.getPrice() * products.get(product);
+        }
+        return totalAmount;
+    }
+
+    public String display() {
+        String productsInfo = "";
+        for (Product product : products.keySet()) {
+            productsInfo += String.format("Product: %s, price: %f * %d = %f\n", product.getName(), product.getPrice(),
+                    products.get(product), product.getPrice() * products.get(product));
+        }
+        return String.format("Client info:\n%s\nProducts info:\n%s\nTotal Amount: %f\nStatus: %s\n", customer.display(),
+                productsInfo, getTotalAmount(), getStatus());
+    }
 }
