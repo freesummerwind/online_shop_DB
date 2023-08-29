@@ -5,6 +5,12 @@ public abstract class Person {
 
     abstract String display();
 
+    public Person(String name, String surname, int age) throws Exception{
+        setName(name);
+        setSurname(surname);
+        setAge(age);
+    }
+
     public void setName(String name) throws Exception {
         if (name.isEmpty()) {
             throw new Exception("Name can't be empty");
