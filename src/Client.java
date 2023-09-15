@@ -1,21 +1,45 @@
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Client extends Person{
+public class Client extends Person {
+    private final int id;
     private String address;
     private String cardNumber;
     private String phoneNumber;
     private HashMap<Product, Integer> basket;
+    private static int clientsNumber = 0;
 
 
     public Client(String name, String surname, int age, String address, String cardNumber, String phoneNumber) throws Exception {
         super(name, surname, age);
+        this.id = ++clientsNumber;
         setAddress(address);
         setCardNumber(cardNumber);
         setPhoneNumber(phoneNumber);
         basket = new HashMap<>();
+    }
+
+    public Client(JSONObject clientJSON, HashMap<Integer, Product> products) throws Exception {
+        super(clientJSON.getString("name"), clientJSON.getString("surname"), clientJSON.getInt("age"));
+        this.id = clientJSON.getInt("id");
+        setAddress(clientJSON.getString("address"));
+        setCardNumber(clientJSON.getString("cardNumber"));
+        setPhoneNumber(clientJSON.getString("phoneNumber"));
+        basket = new HashMap<>();
+        JSONArray basketJSON = clientJSON.getJSONArray("basket");
+        for (int i = 0; i < basketJSON.length(); ++i) {
+            JSONObject productJSON = (JSONObject) basketJSON.get(i);
+            int productID = productJSON.getInt("id");
+            if (!products.containsKey(productID)) {
+                throw new Exception("No product with such ID: " + Integer.toString(productID));
+            }
+            int productAmount = productJSON.getInt("number");
+            basket.put(products.get(productID), productAmount);
+        }
+        clientsNumber++;
     }
 
     public void setAddress(String address) throws Exception {
@@ -47,6 +71,10 @@ public class Client extends Person{
 
     public void setBasket(HashMap<Product, Integer> basket) {
         this.basket = basket;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getAddress() {
@@ -93,23 +121,34 @@ public class Client extends Person{
     }
 
     public Order createNewOrder() throws Exception {
-        return new Order(this, basket);
+        Order order = new Order(this, basket);
+        basket.clear();
+        return order;
     }
 
     @Override
     String display() {
-        return String.format("Full name: %s\nPhone: %s\nCard number: %s\nAddress: %s\n", getSurname() + " " + getName(),
-                getPhoneNumber(), getCardNumber(), getAddress());
+        return String.format("ID:%d\nFull name: %s\nPhone: %s\nCard number: %s\nAddress: %s\n", getId(),
+                getSurname() + " " + getName(), getPhoneNumber(), getCardNumber(), getAddress());
     }
 
     public JSONObject toJSON() {
         JSONObject client = new JSONObject();
+        client.put("id", getId());
         client.put("name", getName());
         client.put("surname", getSurname());
         client.put("age", getAge());
         client.put("address", getAddress());
         client.put("cardNumber", getCardNumber());
         client.put("phoneNumber", getPhoneNumber());
+        JSONArray productsInBasket = new JSONArray();
+        for (Product product : basket.keySet()) {
+            JSONObject current = new JSONObject();
+            current.put("id", product.getId());
+            current.put("number", basket.get(product));
+            productsInBasket.put(current);
+        }
+        client.put("basket", productsInBasket);
         return client;
     }
 }
